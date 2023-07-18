@@ -34,7 +34,7 @@ const TextFormField: React.FC<TextFormFieldProps> = ({
               backgroundColor: 'white',
               color: 'black',
               fontSize: 16,
-              fontFamily: 'Roboto',
+              fontFamily: 'Roboto'
             }}
             placeholder={placeholder}
             onBlur={onBlur}

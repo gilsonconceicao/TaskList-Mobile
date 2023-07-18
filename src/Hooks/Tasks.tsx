@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { CreaateTaskProps, TaskType, createTask, deleteTask, getTaskData } from "../Services/tasks";
+import { CreaateTaskProps, TaskType, postCreateTask, deleteTask, getTaskByIdData, getTaskData, putEditTask } from "../Services/tasks";
 
 export function getTasks () {
   const { data, error, isLoading, isError, refetch, status} = useQuery({ 
@@ -12,10 +12,32 @@ export function getTasks () {
   return { data, error, isLoading, isError, refetch, status}; 
 }
 
+export function  useGetTaskById (taskId:string ) {
+  const { data, error, isLoading, isError, refetch, status} = useQuery({ 
+    enabled: !!taskId && taskId !== "newTask", 
+    queryKey: ['get-task-by-id', taskId],  
+    queryFn: async () =>{ 
+      const { data } = await getTaskByIdData(taskId!);
+      return data as TaskType as any; 
+    } 
+  }); 
+  return { data, error, isLoading, isError, refetch, status}; 
+}
+
 export const createTaskUseMutation = (onSuccess?: () => void, onError?: () => void) => {
   return useMutation({
     mutationFn: async (values: CreaateTaskProps) => {
-      return await createTask(values)
+      return await postCreateTask(values)
+    },
+    onSuccess, 
+    onError
+  })
+}
+
+export const editTaskUseMutation = (id: string, onSuccess?: () => void, onError?: () => void) => {
+  return useMutation({
+    mutationFn: async (values: CreaateTaskProps) => {
+      return await putEditTask(id, values)
     },
     onSuccess, 
     onError

@@ -18,9 +18,9 @@ const TasksContainer: React.FC<TasksProps> = ({ navigation }) => {
   }
 
   const { mutate } = deleteTaskUseMutation(onSuccess);
-
-  const removeTaskById = (id: string) => mutate(id);
   
+  const removeTaskById = (id: string) => mutate(id);
+
   return (
     <ScrollView>
       <Tasks 

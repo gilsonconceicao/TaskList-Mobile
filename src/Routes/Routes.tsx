@@ -7,6 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from '../Views/Home/Home';
 import Tasks from '../Views/Tasks/Tasks';
 import TasksForm from '../Views/Tasks/TasksForm/TasksForm';
+import TasksContainer from '../Views/Tasks/TasksContainer';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +24,7 @@ function Routes() {
         </Stack.Screen>
 
         <Stack.Screen name="Tasks">
-          {(props) => <Tasks {...props} />}
+          {(props) => <TasksContainer {...props} />}
         </Stack.Screen>
 
         <Stack.Screen options={{title: 'Criar tarefa'}} name="CreateTask">

@@ -22,8 +22,17 @@ export async function getTaskData() {
   return response;
 }
 
-export async function createTask(payload: CreaateTaskProps) {
+export async function getTaskByIdData(taskId:string) {
+  const response = await axios.get(`${url}/Task/${taskId}`);
+  return response;
+}
+
+export async function postCreateTask(payload: CreaateTaskProps) {
   return await axios.post(`${url}/Task`, payload);
+}
+
+export async function putEditTask(id: string, payload: CreaateTaskProps) {
+  return await axios.put(`${url}/Task/${id}`, payload);
 }
 
 export async function deleteTask(id: string) {

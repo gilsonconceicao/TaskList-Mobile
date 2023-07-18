@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { IconButton } from 'react-native-paper';
-import { deleteTaskUseMutation, getTasks } from '../../Hooks/Tasks';
 import { HStack, Box, Spacer } from "@react-native-material/core";
 import { Text, Button, PaperProvider } from 'react-native-paper';
 import { TaskType } from '../../Services/tasks';
@@ -9,7 +8,7 @@ import { TaskType } from '../../Services/tasks';
 type TasksProps = {
   navigation: any;
   removeTaskById: (id: string) => void;
-  taskList: TaskType[]; 
+  taskList: TaskType[];
   refetch: () => void;
 }
 
@@ -23,14 +22,14 @@ const Tasks: React.FC<TasksProps> = ({ navigation, refetch, removeTaskById, task
           icon='hospital'
           children='Adicionar'
           mode='contained'
-          onPress={() => navigation.navigate('CreateTask')}
+          onPress={() => navigation.navigate('CreateTask', {id: 'newTask'})}
           style={{ width: 120, marginRight: 10, marginTop: 2 }}
         />
         <IconButton onPress={() => refetch()} icon='refresh' />
       </HStack>
 
-      {taskList?.length ? taskList?.map((item) =>
-        <View style={taskStyle.cardTask}>
+      {taskList?.length > 0 ? taskList?.map((item, indice) =>
+        <View style={taskStyle.cardTask} key={indice}>
           <Text style={{
             fontSize: 20,
             fontWeight: 'bold',
@@ -49,16 +48,30 @@ const Tasks: React.FC<TasksProps> = ({ navigation, refetch, removeTaskById, task
             onPress={() => removeTaskById(item.id)}
             iconColor='#222'
             style={{
-              top: 0,
-              right: 0,
+              top: -10,
+              right: -10,
+              position: 'absolute',
+            }}
+          />
+          <IconButton
+            icon='circle-edit-outline'
+            onPress={() =>
+              navigation?.navigate('CreateTask', {
+                id: item.id
+              })
+            }
+            iconColor='#222'
+            style={{
+              top: -10,
+              right: 20,
               position: 'absolute',
             }}
           />
         </View>
-      ) : 
-      <View style={{marginTop: '60%'}}>
-        <Text style={taskStyle.notTaskTitle} children='Nenhuma tarefa adicionada'/>
-      </View>}
+      ) :
+        <View style={{ marginTop: '60%' }}>
+          <Text style={taskStyle.notTaskTitle} children='Nenhuma tarefa adicionada' />
+        </View>}
     </View>
   )
 }
@@ -77,7 +90,7 @@ const taskStyle = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#444',
-    height: '100%', 
+    height: '100%',
     textAlign: 'center'
   },
   cardTask: {
