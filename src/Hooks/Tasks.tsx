@@ -12,9 +12,9 @@ export function getTasks () {
   return { data, error, isLoading, isError, refetch, status}; 
 }
 
-export function  useGetTaskById (taskId:string ) {
+export function  useGetTaskById (taskId: string) {
   const { data, error, isLoading, isError, refetch, status} = useQuery({ 
-    enabled: !!taskId && taskId !== "newTask", 
+    enabled: !!taskId && taskId !== 'newTask', 
     queryKey: ['get-task-by-id', taskId],  
     queryFn: async () =>{ 
       const { data } = await getTaskByIdData(taskId!);

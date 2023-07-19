@@ -1,6 +1,6 @@
-import { StyleSheet, View } from 'react-native'
+import { View } from 'react-native'
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { defaultValues, tasksFormSchema } from './TasksFormSchema';
 import TextFormField from '../../../Components/TextFormField/TextFormField';
 import { Button, Text } from 'react-native-paper';
@@ -13,13 +13,13 @@ type TasksFormProps = {
 
 const TasksForm = ({ navigation, route }: TasksFormProps) => {
   const { id } = route?.params;
-  const { data, isLoading } = useGetTaskById(id);
-  const { refetch } = getTasks();
   const isEditMode = id !== 'newTask';
+  const { data: dataList,  refetch } = getTasks();
+  const data = dataList?.find(task => task.id === id);
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const formValues = useForm({
     resolver: yupResolver(tasksFormSchema()),
-    defaultValues: isEditMode ? data : defaultValues
+    defaultValues: data ?? {} ?? defaultValues
   });
 
   const onSuccess = () => {
@@ -31,46 +31,36 @@ const TasksForm = ({ navigation, route }: TasksFormProps) => {
   const { mutate: editMutation } = editTaskUseMutation(id, onSuccess);
   const onSubmit = (values: any) => isEditMode ? editMutation(values) : createMutation(values);
 
-  if ( isEditMode && isLoading && data === undefined) {
-    return <Text style={{margin: 20}}>Carregando...</Text>
+  if (isEditMode && data === undefined) {
+    return <Text style={{ margin: 20 }}>Carregando...</Text>
   }
 
   return (
     <View>
       <>
-        <TextFormField
-          placeholder='Título'
-          control={control}
-          name="title"
-          errors={errors.title}
-        />
-        <TextFormField
-          control={control}
-          placeholder='Descrição'
-          name="description"
-          errors={errors.description}
-        />
-        <Button
-          children='Salvar'
-          mode='contained'
-          onPress={handleSubmit(onSubmit)}
-          style={{ marginRight: 20, marginLeft: 20, marginTop: 20 }}
-        />
+        <FormProvider {...formValues}>
+          <TextFormField
+            placeholder='Título'
+            control={formValues.control}
+            name="title"
+            errors={formValues.formState.errors.title}
+          />
+          <TextFormField
+            control={formValues.control}
+            placeholder='Descrição'
+            name="description"
+            errors={formValues.formState.errors.description}
+          />
+          <Button
+            children='Salvar'
+            mode='contained'
+            onPress={formValues.handleSubmit(onSubmit)}
+            style={{ marginRight: 20, marginLeft: 20, marginTop: 20 }}
+          />
+        </FormProvider>
       </>
     </View>
   )
 }
-
-const taskStyle = StyleSheet.create({
-  title: {
-    fontSize: 30,
-    fontStyle: 'italic',
-    fontWeight: 'bold',
-    color: '#444',
-    marginBottom: 8,
-    marginLeft: 10,
-    marginTop: 10
-  }
-})
 
 export default TasksForm
