@@ -3,18 +3,18 @@ import { Controller } from 'react-hook-form'
 import { Text, TextInput } from 'react-native'
 
 type TextFormFieldProps = {
-  control?: any; 
+  control?: any;
   errors?: any;
   placeholder: string;
   name: string;
   required?: boolean;
 }
 
-const TextFormField: React.FC<TextFormFieldProps> = ({ 
-  control, 
-  errors, 
-  placeholder, 
-  name, 
+const TextFormField: React.FC<TextFormFieldProps> = ({
+  control,
+  errors,
+  placeholder,
+  name,
   required
 }) => {
   return (
@@ -22,7 +22,7 @@ const TextFormField: React.FC<TextFormFieldProps> = ({
       <Controller
         control={control}
         rules={{ required }}
-        render={({ field: { onChange, onBlur, value } }) => (
+        render={({ field: { onChange, onBlur, value } }) =>
           <TextInput
             style={{
               height: 40,
@@ -41,15 +41,15 @@ const TextFormField: React.FC<TextFormFieldProps> = ({
             onChangeText={onChange}
             value={value}
           />
-        )}
+        }
         name={name}
       />
-      {errors && 
+      {errors &&
         <Text style={{
-          color:'red',
+          color: 'red',
           fontSize: 12,
           fontFamily: 'Roboto',
-          marginLeft: 13, 
+          marginLeft: 13,
           marginTop: -3
         }}>{errors?.message}</Text>
       }
